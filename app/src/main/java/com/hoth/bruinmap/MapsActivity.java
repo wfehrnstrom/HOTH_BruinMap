@@ -1,6 +1,7 @@
 package com.hoth.bruinmap;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +38,7 @@ import org.json.JSONObject;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    private FusedLocationProviderClient mFusedLocationClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
 
@@ -70,7 +74,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .bearing(90)
                 .build()));
         makeCall("", "");
-        GeofencingClient mGeofencingClient;
+        try
+        {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            System.out.println("YAY");
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                            }
+                        }
+                    });
+        }
+        catch(Exception SecurityException)
+        {
+            System.out.println("NOO");
+        }
+
+       /* GeofencingClient mGeofencingClient;
         mGeofencingClient = LocationServices.getGeofencingClient(this);
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
@@ -86,6 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                         Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build());
+    */
     }
 
     public void makeCall(String endpoint, String course){
