@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -85,16 +88,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .build()));
         makeCall("", "");
         GeofencingClient mGeofencingClient;
-        List<Geofence> mGeofenceList = new ArrayList<Geofence>();
+        final List<Geofence> mGeofenceList = new ArrayList<Geofence>();
         mGeofencingClient = LocationServices.getGeofencingClient(this);
+
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
                 .setRequestId("#01")
 
-                .setCircularRegion(34.0689,
-                        -118.4452,
-                        3000
+                .setCircularRegion(34.0721899,
+                        -118.44976839999998,
+                        25
                 )
                 .setExpirationDuration(1000000)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
@@ -103,6 +107,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+            mMap.setMyLocationEnabled(true);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -115,6 +120,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onSuccess(Void aVoid) {
                         System.out.println("GEOFENCES ADDED!");
+                        for(Geofence g : mGeofenceList) {
+                            Circle circle = mMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(34.0721899, -118.44976839999998))
+                                    .radius(25)
+                                    .fillColor(0x40ff0000)
+                                    .strokeColor(Color.TRANSPARENT)
+                                    .strokeWidth(2));
+                        }
                     }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -123,7 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         System.out.println("GEOFENCES UNABLE TO BE ADDED.");
                     }
                 });
-
+        
     }
 
     private GeofencingRequest getGeofencingRequest(List<Geofence> mGeofenceList) {

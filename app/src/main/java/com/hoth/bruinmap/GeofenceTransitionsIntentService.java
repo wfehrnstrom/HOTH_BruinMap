@@ -16,6 +16,8 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +85,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
     private String getTransitionString(int transitionType) {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                return "geofence enter";
+                return "Flyer Notification";
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return "geofence exit";
+                return "Flyer no longer Available";
             default:
-                return "geofence unknown";
+                return "Flyer unknown";
         }
     }
 
@@ -96,6 +98,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
      * If the user clicks the notification, control goes to the MainActivity.
      */
     private void sendNotification(String notificationDetails) {
+        System.out.println("SEND NOTIFICATION!");
         // Get an instance of the Notification manager
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -138,7 +141,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                         R.mipmap.ic_launcher))
                 .setColor(Color.RED)
                 .setContentTitle(notificationDetails)
-                .setContentText("Entered into Geofence!")
+                .setContentText("Carnesale Commons: Flyer Available!")
                 .setContentIntent(notificationPendingIntent);
 
         // Set the Channel ID for Android O.
@@ -151,5 +154,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Issue the notification
         mNotificationManager.notify(0, builder.build());
+
     }
 }
