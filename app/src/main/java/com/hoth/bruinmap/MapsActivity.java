@@ -13,6 +13,12 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -52,24 +58,45 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.maps.android.PolyUtil.*;
+    import static com.google.maps.android.PolyUtil.*;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
     private static final String TAG = MapsActivity.class.getSimpleName();
+    Button submit_btn;
+    EditText search_bar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_raw);
+        submit_btn = (Button) findViewById(R.id.button1);
+        search_bar = (EditText) findViewById(R.id.searchView1);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+       search_bar.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submit_btn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+
 
     }
 
@@ -125,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new LatLng(34.057847, -118.447928), new LatLng(34.078220, -118.436024));
         // First is Southwest corner
         // Second is Northeast Corner
-        LatLng cameraPos = new LatLng(34.069496, -118.444823);
+        final LatLng cameraPos = new LatLng(34.069496, -118.444823);
 
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                 new CameraPosition.Builder()
@@ -140,40 +167,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         makeCall("", "");
         DateTime now = new DateTime();
         String origin = "";
+        String destination ="";
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            double longitude = location.getLongitude();
-                            double latitude = location.getLatitude();
+        submit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                        }
-                    }
-                });
+                String inputDestination = search_bar.getText().toString();
+                DirectionsResult results = getDirectionsDetails("Boelter Hall, Los Angeles", inputDestination,TravelMode.WALKING);
+                if (results != null) {
+                    addPolyline(results, mMap);
+                    addMarkersToMap(results, mMap);
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                            .target(new LatLng(34.069916, -118.443120))
+                            .zoom(19)
+                                    .tilt(45)
+                            .build()));
+                }
+                results = null;
+            }
+        });
 
 
-        String destination = "Boelter Hall, Los Angeles";
 
-        DirectionsResult results = getDirectionsDetails(origin,destination,TravelMode.WALKING);
-        if (results != null) {
-            addPolyline(results, googleMap);
-            addMarkersToMap(results, googleMap);
-
-        }
 
 
 
