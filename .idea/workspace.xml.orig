@@ -1937,12 +1937,9 @@
       <list>
         <option value="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" />
         <option value="$PROJECT_DIR$/gradle.properties" />
-<<<<<<< HEAD
-=======
         <option value="$PROJECT_DIR$/app/src/main/java/com/hoth/bruinmap/MapsActivityRaw.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_maps_raw.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/hoth/bruinmap/MapsActivity.java" />
->>>>>>> baran
         <option value="$PROJECT_DIR$/local.properties" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
@@ -2014,10 +2011,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-<<<<<<< HEAD
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-=======
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
             </PATH_ELEMENT>
@@ -2062,7 +2057,6 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.other.NonAndroidSourceTypeNode" />
->>>>>>> baran
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ic_launcher.png" />
@@ -2363,8 +2357,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518903600849" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518896425602" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518923788583" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2449,7 +2442,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="app" />
+      <module name="BruinMap" />
       <envs />
       <method />
     </configuration>
@@ -2611,8 +2604,8 @@
       <option name="project" value="LOCAL" />
       <updated>1518922970704</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
-    <task id="LOCAL-00003" summary="Set Map to zoom in on UCLA Campus by default.">
+    <option name="localTasksCounter" value="00005" />
+    <task id="LOCAL-00005" summary="Set Map to zoom in on UCLA Campus by default.">
       <created>1518895583558</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
