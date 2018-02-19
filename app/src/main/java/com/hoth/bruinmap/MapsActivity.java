@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -143,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                 new CameraPosition.Builder()
-                        .target(start)
+                        .target(cameraPos)
                         .tilt(0)
                         .zoom(15)
                         .bearing(90)
@@ -167,14 +168,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
             mMap.setMyLocationEnabled(true);
-                        .target(cameraPos)
-                        .zoom(15)
-                        .tilt(0)
-                        .bearing(-20)
-                        .build()));
         mMap.setMinZoomPreference(15);
 
         mMap.setLatLngBoundsForCameraTarget(UCLA);
@@ -212,7 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         System.out.println("GEOFENCES UNABLE TO BE ADDED.");
                     }
                 });
-
+        }
     }
 
     private GeofencingRequest getGeofencingRequest(List<Geofence> mGeofenceList) {
