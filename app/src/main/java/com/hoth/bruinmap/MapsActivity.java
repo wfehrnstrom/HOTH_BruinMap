@@ -1,6 +1,7 @@
 package com.hoth.bruinmap;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -67,7 +69,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.maps.android.PolyUtil.*;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends Activity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
     private PendingIntent geofenceIntent;
@@ -78,13 +80,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_raw);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the MapFragment and get notified when the map is ready to be used.
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) this.getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
     }
 
     private DirectionsResult getDirectionsDetails(String origin, String destination, TravelMode mode) {
@@ -232,7 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void makeCall(String endpoint, String course){
         RequestQueue rq = Volley.newRequestQueue(this);
-        String url = endpoint;// "http://api.ucladevx.com/courses/winter/computer/";
+        String url = "http://api.ucladevx.com/courses/winter/computer/";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
