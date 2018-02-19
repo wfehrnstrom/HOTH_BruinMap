@@ -1,2 +1,2 @@
-Important Information for MapFly
---------------------------------
+Important Information for BruinMap
+----------------------------------
