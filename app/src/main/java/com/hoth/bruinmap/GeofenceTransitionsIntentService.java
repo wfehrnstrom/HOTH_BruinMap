@@ -129,9 +129,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
         // Get a PendingIntent containing the entire back stack.
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        String CHANNEL_ID = "BruinMap";
         // Get a notification builder that's compatible with platform versions >= 4
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
 
         // Define the notification settings.
         builder.setSmallIcon(R.mipmap.ic_launcher)
@@ -143,11 +143,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 .setContentTitle(notificationDetails)
                 .setContentText("Carnesale Commons: Flyer Available!")
                 .setContentIntent(notificationPendingIntent);
-
-        // Set the Channel ID for Android O.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId("channel_01"); // Channel ID
-        }
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);
