@@ -14,6 +14,12 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -67,7 +73,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.maps.android.PolyUtil.*;
+    import static com.google.maps.android.PolyUtil.*;
 
 public class MapsActivity extends Activity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationClient;
@@ -75,16 +81,38 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
     private PendingIntent geofenceIntent;
     private int REQUEST_FINE_LOCATION = 1;
     private static final String TAG = MapsActivity.class.getSimpleName();
+    Button submit_btn;
+    EditText search_bar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_raw);
-        // Obtain the MapFragment and get notified when the map is ready to be used.
+        submit_btn = (Button) findViewById(R.id.button1);
+        search_bar = (EditText) findViewById(R.id.searchView1);
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         MapFragment mapFragment = (MapFragment) this.getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+       search_bar.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submit_btn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+
+
     }
 
     private DirectionsResult getDirectionsDetails(String origin, String destination, TravelMode mode) {
@@ -140,7 +168,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
                 new LatLng(34.057847, -118.447928), new LatLng(34.078220, -118.436024));
         // First is Southwest corner
         // Second is Northeast Corner
-        LatLng cameraPos = new LatLng(34.069496, -118.444823);
+        final LatLng cameraPos = new LatLng(34.069496, -118.444823);
 
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                 new CameraPosition.Builder()
@@ -215,6 +243,35 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
         geofenceIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
         return geofenceIntent;
+        DateTime now = new DateTime();
+        String origin = "";
+        String destination ="";
+
+        submit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String inputDestination = search_bar.getText().toString();
+                DirectionsResult results = getDirectionsDetails("Boelter Hall, Los Angeles", inputDestination,TravelMode.WALKING);
+                if (results != null) {
+                    addPolyline(results, mMap);
+                    addMarkersToMap(results, mMap);
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                            .target(new LatLng(34.069916, -118.443120))
+                            .zoom(19)
+                                    .tilt(45)
+                            .build()));
+                }
+                results = null;
+            }
+        });
+
+
+
+
+
+
     }
 
     public void makeCall(String endpoint, String course){
