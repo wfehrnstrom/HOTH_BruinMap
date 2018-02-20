@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BruinMap</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="directionsApiKey">AIzaSyD0OTeHZTqD0ffEjOJd5BpvrgxKLYOdBiY</string>
+</resources>
