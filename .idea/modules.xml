@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HOTH_BruinMap.iml" filepath="$PROJECT_DIR$/HOTH_BruinMap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BruinMapClean.iml" filepath="$PROJECT_DIR$/BruinMapClean.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

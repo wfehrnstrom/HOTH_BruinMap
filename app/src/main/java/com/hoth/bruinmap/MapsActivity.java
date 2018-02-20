@@ -178,6 +178,31 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
                         .bearing(90)
                         .build()));
         makeCall("", "");
+
+        DateTime now = new DateTime();
+        String origin = "";
+        String destination ="";
+
+        submit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String inputDestination = search_bar.getText().toString();
+                DirectionsResult results = getDirectionsDetails("Boelter Hall, Los Angeles", inputDestination,TravelMode.WALKING);
+                if (results != null) {
+                    addPolyline(results, mMap);
+                    addMarkersToMap(results, mMap);
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                                    .target(new LatLng(34.069916, -118.443120))
+                                    .zoom(19)
+                                    .tilt(45)
+                                    .build()));
+                }
+                results = null;
+            }
+        });
+
         GeofencingClient mGeofencingClient;
         final List<Geofence> mGeofenceList = new ArrayList<Geofence>();
         mGeofencingClient = LocationServices.getGeofencingClient(this);
@@ -186,11 +211,11 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
             mMap.setMyLocationEnabled(true);
         }
+
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
                 .setRequestId("#01")
-
                 .setCircularRegion(34.0721899,
                         -118.44976839999998,
                         25
@@ -199,8 +224,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                         Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build());
+
         mMap.setMinZoomPreference(15);
         mMap.setLatLngBoundsForCameraTarget(UCLA);
+
         mGeofencingClient.addGeofences(getGeofencingRequest(mGeofenceList), getGeofencePendingIntent())
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
@@ -225,54 +252,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
     }
 
 
-    private GeofencingRequest getGeofencingRequest(List<Geofence> mGeofenceList) {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-        if (geofenceIntent != null) {
-            return geofenceIntent;
-        }
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        geofenceIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
-        return geofenceIntent;
-        DateTime now = new DateTime();
-        String origin = "";
-        String destination ="";
-
-        submit_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String inputDestination = search_bar.getText().toString();
-                DirectionsResult results = getDirectionsDetails("Boelter Hall, Los Angeles", inputDestination,TravelMode.WALKING);
-                if (results != null) {
-                    addPolyline(results, mMap);
-                    addMarkersToMap(results, mMap);
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                            new CameraPosition.Builder()
-                            .target(new LatLng(34.069916, -118.443120))
-                            .zoom(19)
-                                    .tilt(45)
-                            .build()));
-                }
-                results = null;
-            }
-        });
 
 
 
-
-
-
-    }
 
     public void makeCall(String endpoint, String course){
         RequestQueue rq = Volley.newRequestQueue(this);
@@ -333,6 +315,23 @@ public class MapsActivity extends Activity implements OnMapReadyCallback {
     private void addPolyline(DirectionsResult results, GoogleMap mMap) {        List<LatLng> decodedPath = decode(results.routes[0].overviewPolyline.getEncodedPath());
         mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
     }
-
+    private GeofencingRequest getGeofencingRequest(List<Geofence> mGeofenceList) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (geofenceIntent != null) {
+            return geofenceIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        geofenceIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return geofenceIntent;
+    }
 
 }
